@@ -1,0 +1,72 @@
+#%RAML 1.0
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/29196412-c91a-4dd4-916d-d87997e4577d/ # 
+
+title: custumerManagementAPI
+version: v1
+
+types: 
+  withId: !include frags/type1.raml
+  withNoId: !include frags/type2.raml
+
+/users:
+  get:
+    description: retrieve all users
+    responses: 
+      200:
+        body:
+          application/json:
+            example: !include examples/getAllUsers.raml
+      
+  /{id}:
+    description: retrieve a user by id
+    get:
+      responses: 
+        200:
+          body:
+            application/json:
+              example: !include examples/getPutDeleteById.raml
+        400:
+          body:
+            application/json:
+              example: |
+                {"message": "User not found!"}
+  put:
+    description: update user's information by id
+    body:
+      application/json:
+        type: withId
+        example: !include examples/getPutDeleteById.raml
+    responses: 
+      200:
+        body:
+          application/json:
+            example: |
+              {"message": "User's information updated!"}
+  delete: 
+    description: remaove a user by id 
+    queryParameters:
+      id:
+        displayName: ID
+        description: user's identificaion number
+        type: integer
+        required: true
+            
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {"message": "User successfully deleted!"}
+  post:
+    description: create a user's information
+    body:
+        application/json:
+          type: withNoId []
+          example: !include examples/postUser.raml
+    responses:
+      201:
+        body:
+          application/json:
+            example: |
+              {"message": "User successfuly created!"}
+              
